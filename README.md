@@ -1,52 +1,35 @@
-# ChestPainBench Project Page
+# ChestPainBench
 
-This repository contains the public-facing project page for **ChestPainBench: Evaluating LVLMs for Multimodal Clinical Reasoning in Chest Pain**.
+**Evaluating LVLMs for Multimodal Clinical Reasoning in Chest Pain**
 
-The page presents the research motivation, benchmark design, evaluation framework, principal findings, authorship information, and ethical constraints. It intentionally does **not** include clinical data, case-level model outputs, API credentials, model weights, or the internal evaluation codebase.
+[Project page](https://qilegu.github.io/ChestPainBench/)
 
-## Preview locally
+ChestPainBench is a case-level benchmark for evaluating large vision-language models in clinically grounded chest pain scenarios. It brings together coronary angiography, chest radiographs, ECG waveforms, ECG reports, and diagnostic reports from the same patient, allowing models to be assessed on both structured questions and open-ended clinical reasoning.
 
-From the repository root, run:
+## Benchmark
 
-```powershell
-python -m http.server 8000
-```
+- 312 patient-level cases
+- Five matched clinical evidence sources
+- 1,248 multiple-choice questions
+- 2,496 open-ended questions
+- Five clinical task categories, from modality recognition to treatment recommendation
+- Nine general-purpose, medically specialized, and proprietary LVLMs
 
-Then open `http://localhost:8000`.
+## Evaluation
 
-## Repository structure
+Multiple-choice responses are evaluated by accuracy. Open-ended responses are evaluated using F1, ROUGE-L, BLEU-4, and a reference-guided rubric covering clinical correctness, completeness, reasoning coherence, safety, and overall quality. Single-modality ablations measure model sensitivity to coronary angiography, ECG waveforms, chest radiographs, and textual reports.
 
-```text
-.
-|-- index.html
-|-- assets/
-|   |-- styles.css
-|   |-- construction-pipeline.png
-|   `-- evaluation-framework.png
-|-- .gitignore
-|-- .nojekyll
-`-- README.md
-```
+## Main findings
 
-## Before publishing
+- Strong multiple-choice performance does not consistently translate into strong open-ended clinical reasoning.
+- Treatment recommendation is the most challenging task category across model families.
+- Medical specialization does not provide a uniform performance advantage.
+- Removing textual reports causes substantially greater degradation than removing any individual image or waveform modality.
 
-- Confirm with the supervising professor and co-authors that the figures may be publicly posted.
-- Confirm the final author list, affiliations, manuscript status, and preferred contact link.
-- The manuscript PDF is intentionally excluded until public distribution is authorized.
-- Keep all clinical source data, patient-level questions, case-level model outputs, and internal code outside this repository.
+## Citation
 
-## GitHub Pages
+Qile Gu, Hongyi Miao, Wenmiao Wang, Zhanyi Yan, Yunfei Zhao, and Shuai He. *ChestPainBench: Evaluating LVLMs for Multimodal Clinical Reasoning in Chest Pain.* Manuscript, 2026.
 
-After review, create a public GitHub repository named `ChestPainBench`, push this folder to the `main` branch, and enable GitHub Pages from the repository root.
+## Data availability
 
-The resulting URL will normally be:
-
-```text
-https://YOUR-USERNAME.github.io/ChestPainBench/
-```
-
-## Content status
-
-All scientific statements and numerical results on the page are drawn from the supplied final manuscript. The clinical data are not distributed because of privacy, ethical, and institutional restrictions.
-
-All rights reserved unless otherwise noted.
+Patient-level clinical data are not publicly distributed because of privacy, ethical, and institutional restrictions.
