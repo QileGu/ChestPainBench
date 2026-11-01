@@ -1,0 +1,19 @@
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
+
+# Never publish credentials or clinical data.
+.env
+.env.*
+*.key
+data/
+dataset/
+clinical_data/
+patient_data/
+case_outputs/
+raw_results/
+*.dcm
+*.nii
+*.nii.gz

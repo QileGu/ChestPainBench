@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ChestPainBench is a case-level multimodal benchmark for evaluating large vision-language models in clinically grounded chest pain scenarios.">
+  <title>ChestPainBench</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="wordmark" href="#top">ChestPainBench</a>
+      <nav aria-label="Page navigation">
+        <a href="#overview">Overview</a>
+        <a href="#benchmark">Benchmark</a>
+        <a href="#results">Results</a>
+        <a href="#ethics">Ethics</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="paper-header">
+      <p class="kicker">Multimodal medical AI benchmark</p>
+      <h1>ChestPainBench: Evaluating LVLMs for Multimodal Clinical Reasoning in Chest Pain</h1>
+
+      <p class="authors">
+        <strong>Qile Gu</strong><sup>1</sup>,
+        Hongyi Miao<sup>2</sup>,
+        Wenmiao Wang<sup>3</sup>,
+        Zhanyi Yan<sup>4</sup>,
+        Yunfei Zhao<sup>3</sup>, and
+        Shuai He<sup>5</sup>
+      </p>
+
+      <div class="affiliations">
+        <span><sup>1</sup> Shanghai Jiao Tong University</span>
+        <span><sup>2</sup> Shandong University</span>
+        <span><sup>3</sup> The Second Qilu Hospital of Shandong University</span>
+        <span><sup>4</sup> Jining Medical University</span>
+        <span><sup>5</sup> Affiliated Hospital of Nantong University</span>
+      </div>
+
+      <div class="resource-links" aria-label="Project resources">
+        <a href="#overview">Abstract</a>
+        <a href="#results">Results</a>
+        <a href="#citation">Citation</a>
+      </div>
+
+      <p class="status-note">Clinical data are not publicly distributed</p>
+    </section>
+
+    <figure class="teaser">
+      <img src="assets/evaluation-framework.png" alt="ChestPainBench evaluation framework from case-level multimodal input through model inference and result analysis">
+      <figcaption>
+        ChestPainBench evaluates structured discrimination and open-ended clinical reasoning under matched multimodal evidence.
+      </figcaption>
+    </figure>
+
+    <section id="overview" class="content-section">
+      <h2>Overview</h2>
+      <p class="abstract">
+        Chest pain assessment requires joint interpretation of heterogeneous clinical evidence, yet many existing evaluations of large vision-language models rely on unimodal inputs, multiple-choice questions, or isolated visual question answering. ChestPainBench is a case-level benchmark containing 312 chest pain cases with electrocardiogram waveforms, chest radiographs, coronary angiography, ECG reports, and diagnostic reports. It evaluates nine general-purpose, medically specialized, and proprietary LVLMs using both structured multiple-choice questions and open-ended clinical question answering.
+      </p>
+      <p>
+        Open-ended responses are assessed with lexical metrics and a reference-guided rubric covering correctness, completeness, coherence, safety, and overall quality. Task-level and single-modality ablation analyses examine where clinical reasoning fails and which evidence sources models rely on most heavily.
+      </p>
+
+      <div class="stats" aria-label="Benchmark statistics">
+        <div><strong>312</strong><span>patient-level cases</span></div>
+        <div><strong>5</strong><span>evidence sources</span></div>
+        <div><strong>1,248</strong><span>multiple-choice questions</span></div>
+        <div><strong>2,496</strong><span>open-ended questions</span></div>
+        <div><strong>9</strong><span>evaluated LVLMs</span></div>
+      </div>
+    </section>
+
+    <section id="benchmark" class="content-section">
+      <h2>Benchmark construction</h2>
+      <p>
+        Each case aligns five sources of evidence from the same patient. Cases with missing, unreadable, or inconsistent data were excluded. The remaining cases underwent patient-level matching, image and text preprocessing, clinical annotation, question construction, and model-specific input formatting.
+      </p>
+
+      <figure class="figure-block">
+        <img src="assets/construction-pipeline.png" alt="ChestPainBench construction pipeline">
+        <figcaption>Figure 1. Overview of the ChestPainBench construction pipeline.</figcaption>
+      </figure>
+
+      <h3>Clinical task hierarchy</h3>
+      <div class="task-table-wrap">
+        <table class="task-table">
+          <thead>
+            <tr>
+              <th>Level</th>
+              <th>Task</th>
+              <th>Evaluation focus</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>Modality recognition</td><td>Identify the source of the clinical evidence.</td></tr>
+            <tr><td>2</td><td>Basic observation</td><td>Extract explicit findings from the available input.</td></tr>
+            <tr><td>3</td><td>Disease-feature extraction</td><td>Relate findings to pathological characteristics.</td></tr>
+            <tr><td>4</td><td>Diagnostic judgment</td><td>Integrate evidence into a case-level diagnosis.</td></tr>
+            <tr><td>5</td><td>Treatment recommendation</td><td>Formulate an appropriate management response.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Evaluation protocol</h2>
+      <p>
+        Multiple-choice performance is measured by accuracy. Candidate options are scored using token-level likelihoods when logits are available; otherwise, the model is instructed to return one option for deterministic parsing. Open-ended responses are evaluated with F1, ROUGE-L, BLEU-4, and a reference-guided rubric scored from 1 to 5.
+      </p>
+      <p>
+        The same case content, modality order, question wording, and required output format are retained across models. Only formatting required by model-specific image placeholders, conversation templates, and inference interfaces is adapted.
+      </p>
+    </section>
+
+    <section id="results" class="content-section">
+      <h2>Results</h2>
+      <div class="key-findings">
+        <div>
+          <strong>98.32%</strong>
+          <span>Highest multiple-choice accuracy</span>
+          <small>GPT-4o</small>
+        </div>
+        <div>
+          <strong>4.593 / 5</strong>
+          <span>Highest reference-guided overall score</span>
+          <small>Gemini-3-Flash</small>
+        </div>
+        <div>
+          <strong>-1.084</strong>
+          <span>Macro-average change without textual reports</span>
+          <small>Reference-guided overall score</small>
+        </div>
+      </div>
+
+      <h3>Overall model comparison</h3>
+      <div class="table-scroll">
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Accuracy</th>
+              <th>F1</th>
+              <th>ROUGE-L</th>
+              <th>BLEU-4</th>
+              <th>Judge overall</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>DeepSeek-VL2</td><td>77.96%</td><td>0.313</td><td>0.272</td><td>0.192</td><td>2.996</td></tr>
+            <tr><td>Qwen3-VL</td><td>97.52%</td><td>0.327</td><td>0.286</td><td>0.151</td><td>4.030</td></tr>
+            <tr><td>mPLUG-Owl3</td><td>94.07%</td><td>0.445</td><td>0.382</td><td>0.228</td><td>3.788</td></tr>
+            <tr><td>MedGemma-4B</td><td>93.37%</td><td>0.446</td><td>0.403</td><td>0.217</td><td>3.875</td></tr>
+            <tr><td>Gemini-3-Flash</td><td>97.60%</td><td>0.296</td><td>0.250</td><td>0.125</td><td><strong>4.593</strong></td></tr>
+            <tr><td>GPT-4o</td><td><strong>98.32%</strong></td><td><strong>0.467</strong></td><td><strong>0.406</strong></td><td><strong>0.234</strong></td><td>4.529</td></tr>
+            <tr><td>Med-Flamingo</td><td>28.69%</td><td>0.064</td><td>0.055</td><td>0.192</td><td>1.081</td></tr>
+            <tr><td>LLaVA</td><td>19.87%</td><td>0.314</td><td>0.278</td><td>0.184</td><td>2.582</td></tr>
+            <tr><td>LLaVA-Med</td><td>21.79%</td><td>0.358</td><td>0.304</td><td>0.212</td><td>2.776</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="result-notes">
+        <h3>Key observations</h3>
+        <ul>
+          <li>Structured and open-ended evaluation provide complementary views of model capability.</li>
+          <li>Treatment recommendation is the most persistent weakness across model families.</li>
+          <li>Lexical similarity and reference-guided clinical quality rank models differently.</li>
+          <li>Medical specialization does not provide a consistent advantage.</li>
+          <li>Removing textual reports causes substantially greater degradation than removing an individual image or waveform modality.</li>
+        </ul>
+      </div>
+
+      <h3>Modality-ablation summary</h3>
+      <div class="table-scroll compact-table">
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>Removed evidence source</th>
+              <th>Macro-average change</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Coronary angiography</td><td>+0.033</td></tr>
+            <tr><td>ECG waveform</td><td>+0.025</td></tr>
+            <tr><td>Chest radiograph</td><td>-0.003</td></tr>
+            <tr class="emphasis-row"><td>Textual reports</td><td>-1.084</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">Small positive values reflect evaluation variation and should not be interpreted as evidence that removing a modality improves performance.</p>
+    </section>
+
+    <section id="ethics" class="content-section">
+      <h2>Ethics and data availability</h2>
+      <p>
+        This study used retrospectively collected, de-identified clinical data and was approved by the institutional ethics committee (Approval No. 2025-K273-01).
+      </p>
+      <p>
+        Patient-level clinical data, source images, reports, questions, and case-level model outputs are not distributed on this project page because of privacy, ethical, and institutional restrictions.
+      </p>
+    </section>
+
+    <section id="citation" class="content-section citation-section">
+      <h2>Citation</h2>
+      <p>
+        Qile Gu, Hongyi Miao, Wenmiao Wang, Zhanyi Yan, Yunfei Zhao, and Shuai He. <em>ChestPainBench: Evaluating LVLMs for Multimodal Clinical Reasoning in Chest Pain.</em> Manuscript, 2026.
+      </p>
+      <p class="table-note">The manuscript PDF is not publicly available at this stage.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>ChestPainBench · Academic project page · 2026</p>
+  </footer>
+</body>
+</html>
